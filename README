@@ -1,0 +1,3 @@
+gen .o:
+cd build/obj ; g++ -c ../../src/main.cpp ; cd ../../ ;
+g++ -o main build/obj/main.o
