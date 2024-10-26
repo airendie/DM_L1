@@ -1,6 +1,8 @@
 #ifndef UNIVERSUM_HPP
 #define UNIVERSUM_HPP
 
+#include <vector>
+
 #include "binary_number.hpp"
 
 using std::vector;
@@ -15,8 +17,14 @@ class Universum
     vector<BinaryNumber> m_gray_code;
 
 public:
+    /// @brief Конструктор
+    /// @param n Разрядность универсума
     Universum(u_int8_t n = 0);
 
+    /// @brief Заполняет универсум числами по возрастанию, начиная с 0
+    void generateIncrNumSeq();
+
+    /// @brief Выводит содержимое универсума на экран
     void print();
 };
 

@@ -2,11 +2,11 @@
 #define BINARY_NUMBER_HPP
 
 #include <iostream>
-#include <vector>
+#include <deque>
 
 #include "def.hpp"
 
-using std::vector;
+using std::deque;
 
 class BinaryNumber
 {
@@ -14,19 +14,25 @@ class BinaryNumber
     u8 m_size;
 
     // Gray's Code
-    vector<int> m_array{0};
+    deque<u8> m_array{0};
 
 public:
-    BinaryNumber() : m_size{0}{}
-    BinaryNumber(u8 n);
+    /// @brief Конструктор
+    /// @param number Число, которое будет представлено в двоичном виде
+    /// @param bit_depth Разрядность (количество разрядов)
+    BinaryNumber(u64 number = 0, u8 bit_depth = 8);
 
     void resize(u8 new_size);
+    void setNumber(u64 number);
 
-    int &operator[](u8 index);
-    int operator[](u8 index) const;
+
+    u8 &operator[](u8 index);
+    u8 operator[](u8 index) const;
 
     u8 size() const { return m_size; }
     void print();
+
+    u64 toUInt64() const;
 
     friend std::ostream &operator<<(std::ostream &os, const BinaryNumber &bin_num);
 };

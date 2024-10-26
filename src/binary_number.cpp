@@ -5,39 +5,38 @@
 
 using std::cout;
 
-BinaryNumber::BinaryNumber(u8 n) : m_size{n}
+BinaryNumber::BinaryNumber(u64 number, u8 bit_depth)
 {
-    try
+    resize(bit_depth);
+    setNumber(number);
+}
+
+// Очищает содержимое массива
+void BinaryNumber::resize(u8 bit_depth)
+{
+    m_array.clear();
+
+    m_size = bit_depth;
+
+    for (int i = 0; i < m_size; ++i)
+        m_array.push_front(0);
+}
+
+// Данная функция не меняет размера массиваы
+void BinaryNumber::setNumber(u64 number)
+{
+    m_array.clear();
+
+    // Изначально был цикл for. Пересмотрел структуру класса. Теперь здесь так.
+    for (int i = 0; i < m_size; ++i)
     {
-        m_array.resize(m_size);
-        if (m_array.empty())
-            throw std::make_exception_ptr("Exception: Out of memory!");
-        for (int i = 0; i < m_size; ++i)
-            m_array.push_back(0);
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
+        m_array.push_front(number & 1);
+
+        number = number >> 1;
     }
 }
 
-void BinaryNumber::resize(u8 new_size)
-{
-    try
-    {
-        m_array.clear();
-
-        m_size = new_size;
-        for (int i = 0; i < m_size; ++i)
-            m_array.push_back(0);
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-}
-
-int &BinaryNumber::operator[](u8 index)
+u8 &BinaryNumber::operator[](u8 index)
 {
     try
     {
@@ -52,7 +51,7 @@ int &BinaryNumber::operator[](u8 index)
     }
 }
 
-int BinaryNumber::operator[](u8 index) const
+u8 BinaryNumber::operator[](u8 index) const
 {
     try
     {
@@ -69,8 +68,23 @@ int BinaryNumber::operator[](u8 index) const
 
 void BinaryNumber::print()
 {
+    std::cout << m_array[7];
+    // for (auto i = m_array.begin(); i != m_array.end(); ++i)
+    //     std::cout << i;
+}
+
+u64 BinaryNumber::toUInt64() const
+{
+    u64 result = 0;
+
     for (int i = 0; i < m_size; ++i)
-        std::cout << m_array[i];
+    {
+        result |= m_array[i];
+        if (i != m_size - 1)
+            result = result << 1;
+    }
+
+    return result;
 }
 
 std::ostream &operator<<(std::ostream &os, const BinaryNumber &bin_num)

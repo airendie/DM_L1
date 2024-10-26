@@ -1,11 +1,9 @@
-Генерация объектных файлов:
-cd build/obj ;
-g++ -c ../../src/main.cpp ;
-g++ -c ../../src/universum.hpp ; ../../src/universum.cpp
-cd ../../
+Build:
+cd build ; make ; cmake .. ; cd ../
 
-Генерация исполняемого файла:
-g++ -o main build/obj/main.o build/obj/universum.o
+Execute:
+cd build ; ./DM_L1 ; cd ../
+
 
 Описание лабораторной работы:
 1. На вход подается число разрядов n. Контроль вводимых значений.
