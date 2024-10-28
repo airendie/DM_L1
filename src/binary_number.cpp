@@ -36,6 +36,12 @@ void BinaryNumber::setNumber(u64 number)
     }
 }
 
+BinaryNumber BinaryNumber::operator^(const BinaryNumber &other)
+{
+
+    return BinaryNumber();
+}
+
 u8 &BinaryNumber::operator[](u8 index)
 {
     try
@@ -68,9 +74,8 @@ u8 BinaryNumber::operator[](u8 index) const
 
 void BinaryNumber::print()
 {
-    std::cout << m_array[7];
-    // for (auto i = m_array.begin(); i != m_array.end(); ++i)
-    //     std::cout << i;
+    for (int i = 0; i < m_size; ++i)
+        std::cout << (int)m_array[i];
 }
 
 u64 BinaryNumber::toUInt64() const
@@ -90,6 +95,6 @@ u64 BinaryNumber::toUInt64() const
 std::ostream &operator<<(std::ostream &os, const BinaryNumber &bin_num)
 {
     for (int i = 0; i < bin_num.size(); ++i)
-        os << bin_num[i];
+        os << (unsigned)bin_num[i];
     return os;
 }

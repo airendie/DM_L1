@@ -8,6 +8,15 @@
 
 using std::deque;
 
+// Дилемма:
+// Для генерации кода Грея удобнее использовать структуру, при которой
+// в соответствующем по индексу бите хранится та же степень двойки
+// N: { 0, 1, 1, 1 }
+// i:   0  1  2  3
+// Но для вывода удобнее, когда все наоборот...
+//
+
+// Класс бинарного массива
 class BinaryNumber
 {
     // max 31
@@ -25,6 +34,7 @@ public:
     void resize(u8 new_size);
     void setNumber(u64 number);
 
+    BinaryNumber operator^(const BinaryNumber &);
 
     u8 &operator[](u8 index);
     u8 operator[](u8 index) const;

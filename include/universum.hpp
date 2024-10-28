@@ -11,7 +11,7 @@ class Universum
 {
     // max 31
     const u8 m_bit_depth;
-    // Universum size = 2^n. Max: 2^32 - 1
+    // Universum size = 2^n. Max: 2^64 - 1
     u_int64_t m_size;
     // Vector of generated Gray's code for all arrays in Universum
     vector<BinaryNumber> m_gray_code;
@@ -23,6 +23,9 @@ public:
 
     /// @brief Заполняет универсум числами по возрастанию, начиная с 0
     void generateIncrNumSeq();
+
+    /// @brief Заполняет универсум кодом Грея
+    void generateGrayCode();
 
     /// @brief Выводит содержимое универсума на экран
     void print();

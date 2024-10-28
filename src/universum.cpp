@@ -20,11 +20,29 @@ void Universum::generateIncrNumSeq()
         m_gray_code[i].setNumber(i);
 }
 
+void Universum::generateGrayCode()
+{
+    // По массивам
+    for (int i = 0; i < m_size; ++i)
+    {
+        int a;
+        // Последний разряд
+    }
+}
+
 void Universum::print()
 {
     cout << "Universum: \n";
-    for (int i = 0; i < m_size; ++i)
+
+    if (m_size)
     {
-        cout << i << ":  { " << m_gray_code[i] << " }\n";
+        for (int i = 0; i < m_size; ++i)
+        {
+            cout << i << ":  { " << m_gray_code[i] << " }\n";
+        }
+    }
+    else
+    {
+        cout << "0: ∅\n";
     }
 }
