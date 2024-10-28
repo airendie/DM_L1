@@ -4,24 +4,9 @@
 
 const u8 MAX_N = 16;
 
-// Не пользовался ни разу
-using std::string;
-
 bool is_digits(const std::string &str)
 {
     return str.find_first_not_of("0123456789") == std::string::npos;
-}
-
-int getNumberLength(int n)
-{
-    int result = 1;
-
-    while (n)
-    {
-        ++result;
-        n %= 10;
-    }
-    return result;
 }
 
 bool is_correct(const std::string &str)
@@ -75,11 +60,12 @@ int main()
 
     if (is_correct(n))
     {
-        std::cout << "Correct.\n";
-        // Universum u(std::stoi(n));
-        // // u.print();
-        // u.generateIncrNumSeq();
-        // u.print();
+        // std::cout << "Correct.\n";
+
+        Universum u(std::stoi(n));
+        //u.print();
+        u.generateGrayCode();
+        u.print();
         // //  BinaryNumber bn(n, 3);
         // //  bn.setNumber(n);
         // //  bn.print();

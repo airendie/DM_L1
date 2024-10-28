@@ -25,8 +25,21 @@ void Universum::generateGrayCode()
     // По массивам
     for (int i = 0; i < m_size; ++i)
     {
-        int a;
-        // Последний разряд
+        for (int j = 0; j < m_bit_depth; ++j)
+        {
+            int full_interval = 1 << (j + 2);
+            int half_of_interval = 1 << (j + 1);
+            int max_limit_of_current_interval = full_interval *
+                    (1 + i / full_interval) - (1 << j);
+
+            int center_of_current_interval =  max_limit_of_current_interval - half_of_interval;
+            m_gray_code[i][j] = (i >= center_of_current_interval &&
+                                 i < max_limit_of_current_interval);
+            // std::cout << "j: " << j << '\n' << i << " is " <<
+            //                 ((m_gray_code[i][j]) ? "behind " : "not behind ") <<
+            //                 max_limit_of_current_interval <<
+            //                   " and " << center_of_current_interval << '\n';
+        }
     }
 }
 
@@ -34,7 +47,7 @@ void Universum::print()
 {
     cout << "Universum: \n";
 
-    if (m_size)
+    if (m_bit_depth)
     {
         for (int i = 0; i < m_size; ++i)
         {
