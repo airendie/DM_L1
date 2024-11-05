@@ -43,7 +43,7 @@ void Universum::generateGrayCode()
     }
 }
 
-void Universum::print()
+void Universum::print() const
 {
     cout << "Universum: \n";
 
@@ -59,3 +59,39 @@ void Universum::print()
         cout << "0: ∅\n";
     }
 }
+
+u64 Universum::size() const
+{
+    return m_size;
+}
+
+BinaryNumber Universum::operator[](u8 index) const
+{
+    try
+    {
+        if (index >= m_size)
+            throw std::out_of_range("Exception: Out of range!");
+
+        return m_gray_code[index];
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    return BinaryNumber();
+}
+
+// BinaryNumber &Universum::operator[](u8 index)
+// {
+//     try
+//     {
+//         if (index >= m_size)
+//             throw std::out_of_range("Exception: Out of range!");
+
+//         return m_gray_code[index];
+//     }
+//     catch (const std::exception &e)
+//     {
+//         std::cerr << e.what() << '\n';
+//     }
+// }

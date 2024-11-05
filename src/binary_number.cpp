@@ -36,10 +36,40 @@ void BinaryNumber::setNumber(u64 number)
     }
 }
 
-BinaryNumber BinaryNumber::operator^(const BinaryNumber &other)
+BinaryNumber &BinaryNumber::operator!()
 {
+    for (int i = 0; i < m_size; ++i)
+    {
+        m_array[i] = m_array[i] ^ 1;
+    }
+}
 
-    return BinaryNumber();
+bool BinaryNumber::operator==(const BinaryNumber &other) const
+{
+    if (m_size == other.size())
+    {
+        for (int i = 0; i < m_size; ++i)
+        {
+            if (m_array[i] != other.m_array[i])
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool BinaryNumber::operator!=(const BinaryNumber &other) const
+{
+    if (m_size == other.size())
+    {
+        for (int i = 0; i < m_size; ++i)
+        {
+            if (m_array[i] != other.m_array[i])
+                return true;
+        }
+        return false;
+    }
+    return true;
 }
 
 u8 &BinaryNumber::operator[](u8 index)

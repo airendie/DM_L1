@@ -34,7 +34,10 @@ public:
     void resize(u8 new_size);
     void setNumber(u64 number);
 
-    BinaryNumber operator^(const BinaryNumber &);
+    BinaryNumber &operator!();
+
+    bool operator==(const BinaryNumber&) const;
+    bool operator!=(const BinaryNumber&) const;
 
     u8 &operator[](u8 index);
     u8 operator[](u8 index) const;
