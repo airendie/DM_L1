@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include "universum.hpp"
+
+#include "binary_multiset.hpp"
 
 const u8 MAX_N = 16;
 
@@ -9,7 +10,12 @@ bool is_digits(const std::string &str)
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
-bool is_correct(const std::string &str)
+bool is_not_all_zeros(const std::string &str)
+{
+    return str.find_first_not_of("0") == std::string::npos;
+}
+
+int to_number(std::string &str)
 {
     // Проверка на наличие элементов в строке
     if (!str.empty())
@@ -17,23 +23,30 @@ bool is_correct(const std::string &str)
         // Проверка на наличие только цифр в строке
         if (is_digits(str))
         {
-            // Проверка первого элемента на 0 (Явный запрет формата: "n = 0123")
-            if (str[0] != '0' || str.length() == 1)
+            // индекс первой ненулевой цифры
+            u32 first_significant_digit = str.find_first_not_of("0");
+            if (first_significant_digit != std::string::npos)
             {
                 // Длина введенного числа может быть больше,
                 // чем длина типа int, что уронит программу
                 // Только если длина введенного числа не больше длины MAX_N,
                 // имеет смысл сравнить числовые значения
 
-                // Проверка числа-строки на возможность быть представленным
-                // в int'е и, если такая возможность есть, проверка на не
+                // Проверка значимой части числа-строки на возможность
+                // быть преобразованной в int и, если такая возможность есть,
+                // проверка на не
                 // превышение максимального значения разрядности
-                if (std::to_string(MAX_N).length() >= str.length() &&
-                    MAX_N >= std::stoi(str))
+
+                if (std::to_string(MAX_N).length() >=
+                        str.substr(first_significant_digit).length() &&
+                    MAX_N >= std::stoi(str.substr(first_significant_digit)))
                 {
-                    return true;
+                    return std::stoi(str.substr(first_significant_digit));
                 }
-                std::cout << "Incorrect input! Bit depth could not be more than " << std::to_string(MAX_N) << "...\n";
+                else
+                {
+                    std::cout << "Incorrect input! Bit depth could not be more than " << std::to_string(MAX_N) << "...\n";
+                }
             }
             else
             {
@@ -49,28 +62,20 @@ bool is_correct(const std::string &str)
     {
         std::cout << "Incorrect input! Number could not be empty...\n";
     }
-    return false;
+
+    return -1;
 }
 
 int main()
 {
     std::string n;
-    std::cout << "Please, input n (integer from 0 to "<< (int)MAX_N << "): ";
+    std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
     std::cin >> n;
 
-    if (is_correct(n))
-    {
-        // std::cout << "Correct.\n";
-
-        Universum u(std::stoi(n));
-        //u.print();
-        u.generateGrayCode();
-        u.print();
-        // //  BinaryNumber bn(n, 3);
-        // //  bn.setNumber(n);
-        // //  bn.print();
-        //  std::cout << std::endl << bn.toUInt64()<< std::endl;
-    }
+    BinaryMultiset u;
+    // u.print();
+    u = generateGrayCode(to_number(n));
+    u.print();
 
     return 1;
 }
