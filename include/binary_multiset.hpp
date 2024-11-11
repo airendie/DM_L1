@@ -2,11 +2,14 @@
 #define BINARY_SET_HPP
 
 #include <vector>
-
+#include <set>
 #include "binary_set.hpp"
 
 using std::pair;
+using std::set;
 using std::vector;
+
+#define DEFAULT_MAX_OCCURRENCE_MULTIPLICITY 1000
 
 // Класс мультимножества
 class BinaryMultiset
@@ -19,7 +22,7 @@ class BinaryMultiset
 
     // Массив адресов мультимножеств,
     // для которых данное мультимножество является универсумом.
-    vector<BinarySet &> m_subsets;
+    set<BinaryMultiset &> m_subsets;
 
     // !TODO Сделать обновление (добавление/удаление) списка детей и кластерное удаление!!!!!!!!!!!!!
 
@@ -30,15 +33,19 @@ class BinaryMultiset
     u64 m_size;
 
     // Максимальная кратность элементов в мультимножестве
-    u32 m_max_occurrence_multiplicity;
+    u64 m_max_occurrence_multiplicity;
 
     // Множество пар из указателей на множество в универсуме и
     // их количества в конкретном мультимножетсве
     vector<pair<BinarySet *, u64>> m_data;
 
 public:
-    /// @brief Конструктор
-    BinaryMultiset(u8 bit_depth = 0, u32 max_occurrence_multiplicity = 0);
+    /// @brief Конструктор универсума
+    /// @param bit_depth Количество элементов в бинарных массиах
+    /// @param max_occurrence_multiplicity Максимальная разрядность в мультимножестве
+    BinaryMultiset(u8 bit_depth = 0, u64 max_occurrence_multiplicity = 0);
+    /// @brief Конструктор мультимножества как подмножества универсума
+    /// @param universum Родительский универсум. От него наследуются все параметры.
     BinaryMultiset(BinaryMultiset *universum);
 
     BinaryMultiset &operator=(const BinaryMultiset &other);
@@ -63,14 +70,30 @@ public:
 
     /// @brief Возращает саксимальную кратность вхождения элементов мультимножетсва
     /// @return Второй части пары <множество; число>
-    u32 max_occurrence_multiplicity() const;
-    pair<BinarySet, u64> operator[](u8 index) const;
+    u64 max_occurrence_multiplicity() const;
+
+    /// @brief Возращает разрядность элементов мультимножетсва
+    /// @return Размер бинарного множества
+    vector<pair<BinarySet *, u64>> &data();
+
+    pair<BinarySet *, u64> operator[](u8 index) const;
+
+    ~BinaryMultiset() { clear(); };
+
+private:
+    void addToUniversumSubsets();
+    void removefromUniversumSubsets();
 };
 
 /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
-BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
+BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth,
+                                                 u64 max_occurrence_multiplicity =
+                                                     DEFAULT_MAX_OCCURRENCE_MULTIPLICITY);
 
 /// @brief Генерирует универсум как код Грея BinaryMultiset generateGrayCodeUniversum(u8 bit_depth);
-BinaryMultiset generateGrayCode(u8 bit_depth);
+BinaryMultiset generateGrayCode(u8 bit_depth,
+                                u64 max_occurrence_multiplicity =
+                                    DEFAULT_MAX_OCCURRENCE_MULTIPLICITY);
 
 #endif // end of binary_set.hpp
+

@@ -15,6 +15,13 @@ bool is_not_all_zeros(const std::string &str)
     return str.find_first_not_of("0") == std::string::npos;
 }
 
+u8 length(u8 n)
+{
+    u8 length = 0;
+    for(; n != 0; ++length, n %=10 )
+    return length;
+}
+
 int to_number(std::string &str)
 {
     // Проверка на наличие элементов в строке
@@ -23,8 +30,9 @@ int to_number(std::string &str)
         // Проверка на наличие только цифр в строке
         if (is_digits(str))
         {
-            // индекс первой ненулевой цифры
+            // Поиск первой ненулевой цифры
             u32 first_significant_digit = str.find_first_not_of("0");
+            // Если в числе есть хотя бы одна ненулевая цифра
             if (first_significant_digit != std::string::npos)
             {
                 // Длина введенного числа может быть больше,
@@ -37,7 +45,7 @@ int to_number(std::string &str)
                 // проверка на не
                 // превышение максимального значения разрядности
 
-                if (std::to_string(MAX_N).length() >=
+                if (length(MAX_N) >=
                         str.substr(first_significant_digit).length() &&
                     MAX_N >= std::stoi(str.substr(first_significant_digit)))
                 {
@@ -48,9 +56,11 @@ int to_number(std::string &str)
                     std::cout << "Incorrect input! Bit depth could not be more than " << std::to_string(MAX_N) << "...\n";
                 }
             }
+            // Введенное число - 0
             else
             {
-                std::cout << "Incorrect input! Number could not start from zero...\n";
+            //    std::cout << "Incorrect input! Number could not start from zero...\n";
+                return 0;
             }
         }
         else

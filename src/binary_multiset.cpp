@@ -5,11 +5,12 @@
 using std::cout;
 
 BinaryMultiset::BinaryMultiset(u8 bit_depth,
-                               u32 max_occurrence_multiplicity) : m_universum(nullptr),
+                               u64 max_occurrence_multiplicity) : m_universum(nullptr),
                                                                   m_bit_depth(bit_depth),
                                                                   m_size((u_int64_t)1 << m_bit_depth),
                                                                   m_max_occurrence_multiplicity(max_occurrence_multiplicity)
 {
+    addToUniversumSubsets();
 }
 
 BinaryMultiset::BinaryMultiset(BinaryMultiset *universum) : m_universum(universum),
@@ -17,45 +18,52 @@ BinaryMultiset::BinaryMultiset(BinaryMultiset *universum) : m_universum(universu
                                                             m_size((m_universum) ? m_universum->m_size : 0),
                                                             m_max_occurrence_multiplicity((m_universum) ? m_universum->m_max_occurrence_multiplicity : 0)
 {
+    addToUniversumSubsets();
 }
 
 BinaryMultiset &BinaryMultiset::operator=(const BinaryMultiset &other)
 {
     if (*this != other)
     {
+        clear();
+
         m_universum = other.m_universum;
         m_bit_depth = other.m_bit_depth;
         m_size = other.m_size;
         m_max_occurrence_multiplicity = other.m_max_occurrence_multiplicity;
         m_data = other.m_data;
+        // При создании мультимножества
+        // m_subsets = other.m_subsets;
     }
 
     return *this;
 }
 
+BinaryMultiset &BinaryMultiset::operator=(BinaryMultiset &&other) noexcept
+{
+    clear();
+
+    return *this = std::move(other);
+}
+
 void BinaryMultiset::clear()
 {
+    m_bit_depth = 0;
+    m_size = 0;
+    m_max_occurrence_multiplicity = 0;
+    m_universum = nullptr;
+
     if (m_universum != nullptr)
     {
-        m_bit_depth = 0;
-        m_size = 0;
-        m_max_occurrence_multiplicity = 0;
-        m_universum = nullptr;
-        m_data.clear();
-    }
-    else
-    {
-        m_bit_depth = 0;
-        m_size = 0;
-        m_max_occurrence_multiplicity = 0;
-        m_universum = nullptr;
-
         for (auto i : m_data)
         {
             delete i.first;
         }
-        m_data.clear();
+
+        m_subsets.clear();
     }
+
+    m_data.clear();
 }
 
 bool BinaryMultiset::operator==(const BinaryMultiset &other) const
@@ -63,7 +71,17 @@ bool BinaryMultiset::operator==(const BinaryMultiset &other) const
     return (m_universum == other.m_universum &&
             m_bit_depth == other.m_bit_depth &&
             m_max_occurrence_multiplicity == other.m_bit_depth &&
-            m_data == other.m_data);
+            m_data == other.m_data &&
+            m_subsets == other.m_subsets);
+}
+
+bool BinaryMultiset::operator!=(const BinaryMultiset &other) const
+{
+    return (m_universum != other.m_universum ||
+            m_bit_depth != other.m_bit_depth ||
+            m_max_occurrence_multiplicity != other.m_bit_depth ||
+            m_data != other.m_data ||
+            m_subsets != other.m_subsets);
 }
 
 void BinaryMultiset::print() const
@@ -74,7 +92,7 @@ void BinaryMultiset::print() const
     {
         for (int i = 0; i < m_size; ++i)
         {
-            cout << i << ":  { " << m_data[i].first << ", " << m_data[i].second << " }\n";
+            cout << i << ":  { " << *m_data[i].first << ", " << m_data[i].second << " }\n";
         }
     }
     else
@@ -93,12 +111,17 @@ u8 BinaryMultiset::bit_depth() const
     return m_bit_depth;
 }
 
-u32 BinaryMultiset::max_occurrence_multiplicity() const
+u64 BinaryMultiset::max_occurrence_multiplicity() const
 {
     return m_max_occurrence_multiplicity;
 }
 
-pair<BinarySet, u64> BinaryMultiset::operator[](u8 index) const
+vector<pair<BinarySet *, u64>> &BinaryMultiset::data()
+{
+    return m_data;
+}
+
+pair<BinarySet *, u64> BinaryMultiset::operator[](u8 index) const
 {
     try
     {
@@ -111,7 +134,51 @@ pair<BinarySet, u64> BinaryMultiset::operator[](u8 index) const
     {
         std::cerr << e.what() << '\n';
     }
-    return pair<BinarySet, u64>{BinarySet(), 0};
+    return pair<BinarySet *, u64>{nullptr, 0};
+}
+
+pair<BinarySet *, u64> &BinaryMultiset::operator[](u8 index)
+{
+    try
+    {
+        if (index >= m_size)
+            throw std::out_of_range("Out of range! Index is greater than size.");
+
+        return m_data[index];
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    return *m_data.end();
+}
+
+void BinaryMultiset::addToUniversumSubsets()
+{
+    if (m_universum != nullptr)
+    {
+        std::pair<std::set<BinaryMultiset &>::iterator, bool> i = m_universum->m_subsets.insert(*this);
+        if (!i.second)
+        {
+            std::cout << "Insertion failure!\n";
+        }
+    }
+}
+
+void BinaryMultiset::removefromUniversumSubsets()
+{
+    if (m_universum != nullptr)
+    {
+        set<BinaryMultiset &>::iterator i;
+        if ((i = m_universum->m_subsets.find(*this)) != m_universum->m_subsets.end())
+        {
+            m_universum->m_subsets.erase(i);
+        }
+        else
+        {
+            cout << "Binary Subset is not found!\n";
+        }
+    }
 }
 
 BinaryMultiset generateGrayCode(u8 bit_depth)
@@ -152,12 +219,12 @@ BinaryMultiset generateGrayCode(u8 bit_depth)
 //     }
 // }
 
-BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth)
+BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth, u64 max_occurance_multiplicity)
 {
-    BinaryMultiset new_set(bit_depth);
+    BinaryMultiset new_set(bit_depth, max_occurance_multiplicity);
 
     for (int i = 0; i < new_set.size(); ++i)
     {
-        new_set[i].first.setNumber(i);
+        new_set.data().push_back(std::pair<BinarySet *, u64>{new BinarySet{bit_depth, max_occurance_multiplicity}, max_occurance_multiplicity});
     }
 }
