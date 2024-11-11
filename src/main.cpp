@@ -72,9 +72,7 @@ int main()
     std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
     std::cin >> n;
 
-    BinaryMultiset u;
-    // u.print();
-    u = generateGrayCode(to_number(n));
+    BinaryMultiset u = generateGrayCode(to_number(n));
     u.print();
 
     return 1;

@@ -11,24 +11,44 @@ using std::vector;
 // Класс мультимножества
 class BinaryMultiset
 {
-    // Pointer to universum
+    // Указатель на универсальное множество
+    // Если мультимножество "верхнее" в иерархии,
+    // указатель на универсум будет пустым.
+    // При уничтожении универсума, очищаются и его "дети"
     BinaryMultiset *m_universum;
 
-    // m_bit_depth = n. max 31
-    const u8 m_bit_depth;
+    // Массив адресов мультимножеств,
+    // для которых данное мультимножество является универсумом.
+    vector<BinarySet &> m_subsets;
 
-    const u64 m_size;
+    // !TODO Сделать обновление (добавление/удаление) списка детей и кластерное удаление!!!!!!!!!!!!!
+
+    // Количество элементов в бинарном множестве
+    u8 m_bit_depth;
+
+    // Количество различных элементов в мультимножестве
+    u64 m_size;
 
     // Максимальная кратность элементов в мультимножестве
-    const u32 m_max_occurrence_multiplicity;
+    u32 m_max_occurrence_multiplicity;
 
-    // Vector of generated Gray's code for all arrays in BinaryMultiset
-    vector<pair<BinarySet, u64>> m_data;
+    // Множество пар из указателей на множество в универсуме и
+    // их количества в конкретном мультимножетсве
+    vector<pair<BinarySet *, u64>> m_data;
 
 public:
     /// @brief Конструктор
     BinaryMultiset(u8 bit_depth = 0, u32 max_occurrence_multiplicity = 0);
     BinaryMultiset(BinaryMultiset *universum);
+
+    BinaryMultiset &operator=(const BinaryMultiset &other);
+    BinaryMultiset &operator=(BinaryMultiset &&other);
+
+    void clear();
+
+    bool operator==(const BinaryMultiset &other) const;
+
+    bool operator!=(const BinaryMultiset &other) const;
 
     /// @brief Выводит содержимое универсума на экран
     void print() const;
@@ -48,7 +68,9 @@ public:
 };
 
 /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
+BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
 
 /// @brief Генерирует универсум как код Грея BinaryMultiset generateGrayCodeUniversum(u8 bit_depth);
+BinaryMultiset generateGrayCode(u8 bit_depth);
 
 #endif // end of binary_set.hpp

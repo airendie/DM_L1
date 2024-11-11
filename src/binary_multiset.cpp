@@ -19,6 +19,53 @@ BinaryMultiset::BinaryMultiset(BinaryMultiset *universum) : m_universum(universu
 {
 }
 
+BinaryMultiset &BinaryMultiset::operator=(const BinaryMultiset &other)
+{
+    if (*this != other)
+    {
+        m_universum = other.m_universum;
+        m_bit_depth = other.m_bit_depth;
+        m_size = other.m_size;
+        m_max_occurrence_multiplicity = other.m_max_occurrence_multiplicity;
+        m_data = other.m_data;
+    }
+
+    return *this;
+}
+
+void BinaryMultiset::clear()
+{
+    if (m_universum != nullptr)
+    {
+        m_bit_depth = 0;
+        m_size = 0;
+        m_max_occurrence_multiplicity = 0;
+        m_universum = nullptr;
+        m_data.clear();
+    }
+    else
+    {
+        m_bit_depth = 0;
+        m_size = 0;
+        m_max_occurrence_multiplicity = 0;
+        m_universum = nullptr;
+
+        for (auto i : m_data)
+        {
+            delete i.first;
+        }
+        m_data.clear();
+    }
+}
+
+bool BinaryMultiset::operator==(const BinaryMultiset &other) const
+{
+    return (m_universum == other.m_universum &&
+            m_bit_depth == other.m_bit_depth &&
+            m_max_occurrence_multiplicity == other.m_bit_depth &&
+            m_data == other.m_data);
+}
+
 void BinaryMultiset::print() const
 {
     cout << "BinaryMultiset: \n";
@@ -46,9 +93,9 @@ u8 BinaryMultiset::bit_depth() const
     return m_bit_depth;
 }
 
-u32 max_occurrence_multiplicity() const
+u32 BinaryMultiset::max_occurrence_multiplicity() const
 {
-    return m_max_occurence_multiplicity;
+    return m_max_occurrence_multiplicity;
 }
 
 pair<BinarySet, u64> BinaryMultiset::operator[](u8 index) const
@@ -81,7 +128,7 @@ BinaryMultiset generateGrayCode(u8 bit_depth)
 
             int center_of_current_interval = max_limit_of_current_interval - half_of_interval;
             new_set[i].first[j] = (i >= center_of_current_interval &&
-                             i < max_limit_of_current_interval);
+                                   i < max_limit_of_current_interval);
             // std::cout << "j: " << j << '\n' << i << " is " <<
             //                 ((m_gray_code[i][j]) ? "behind " : "not behind ") <<
             //                 max_limit_of_current_interval <<
