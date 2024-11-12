@@ -36,6 +36,7 @@ public:
 
     BinarySet &operator!();
 
+    bool operator<(const BinarySet&) const;
     bool operator==(const BinarySet&) const;
     bool operator!=(const BinarySet&) const;
 

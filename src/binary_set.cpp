@@ -42,6 +42,12 @@ BinarySet &BinarySet::operator!()
     {
         m_array[i] = m_array[i] ^ 1;
     }
+    return *this;
+}
+
+bool BinarySet::operator<(const BinarySet &other) const
+{
+    return (toUInt64() < other.toUInt64());
 }
 
 bool BinarySet::operator==(const BinarySet &other) const

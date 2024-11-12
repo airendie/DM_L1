@@ -18,7 +18,10 @@ bool is_not_all_zeros(const std::string &str)
 u8 length(u8 n)
 {
     u8 length = 0;
-    for(; n != 0; ++length, n %=10 )
+
+    for(; n != 0; ++length, n /= 10 );
+
+    std::cout << (int)length <<std::endl;
     return length;
 }
 
@@ -31,7 +34,7 @@ int to_number(std::string &str)
         if (is_digits(str))
         {
             // Поиск первой ненулевой цифры
-            u32 first_significant_digit = str.find_first_not_of("0");
+            size_t first_significant_digit = str.find_first_not_of("0");
             // Если в числе есть хотя бы одна ненулевая цифра
             if (first_significant_digit != std::string::npos)
             {
@@ -45,10 +48,11 @@ int to_number(std::string &str)
                 // проверка на не
                 // превышение максимального значения разрядности
 
-                if (length(MAX_N) >=
-                        str.substr(first_significant_digit).length() &&
-                    MAX_N >= std::stoi(str.substr(first_significant_digit)))
+                std::string signif = str.substr(first_significant_digit);
+                std::cout << signif << std::endl;
+                if (length(MAX_N) >= signif.length() && MAX_N >= std::stoi(signif))
                 {
+                    std::cout << "Correct." << std::endl;
                     return std::stoi(str.substr(first_significant_digit));
                 }
                 else
@@ -60,6 +64,8 @@ int to_number(std::string &str)
             else
             {
             //    std::cout << "Incorrect input! Number could not start from zero...\n";
+
+                std::cout << "Correct." << std::endl;
                 return 0;
             }
         }
@@ -82,7 +88,7 @@ int main()
     std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
     std::cin >> n;
 
-    BinaryMultiset u = generateGrayCode(to_number(n));
+    BinaryMultiset u = generateGrayCode(to_number(n), 10);
     u.print();
 
     return 1;
