@@ -10,11 +10,6 @@ bool is_digits(const std::string &str)
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
-bool is_not_all_zeros(const std::string &str)
-{
-    return str.find_first_not_of("0") == std::string::npos;
-}
-
 u8 length(u8 n)
 {
     u8 length = 0;
@@ -88,8 +83,11 @@ int main()
     std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
     std::cin >> n;
 
-    BinaryMultiset u = generateGrayCode(to_number(n), 10);
+    BinaryMultiset u(to_number(n));
+    // u.generateSeriesOfIncreasingNumbers();
+    //BinaryMultiset k(u);
     u.print();
+    //k.print();
 
     return 1;
 }

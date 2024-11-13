@@ -43,13 +43,16 @@ public:
     /// @brief Конструктор универсума
     /// @param bit_depth Количество элементов в бинарных массиах
     /// @param max_occurrence_multiplicity Максимальная разрядность в мультимножестве
-    BinaryMultiset(u8 bit_depth = 0, u64 max_occurrence_multiplicity = 0);
+    BinaryMultiset(u8 bit_depth = 0, u64 max_occurrence_multiplicity = DEFAULT_MAX_OCCURRENCE_MULTIPLICITY);
     /// @brief Конструктор мультимножества как подмножества универсума
     /// @param universum Родительский универсум. От него наследуются все параметры.
     BinaryMultiset(BinaryMultiset *universum);
     /// @brief Конструктор мультимножества как как копии мультимножества (без его наследников)
     /// @param other Копируемое мультимножество.
     BinaryMultiset(const BinaryMultiset &other);
+
+    BinaryMultiset(BinaryMultiset &&other);
+
 
     /// @brief Перегрузка оператора присваивания. Копирует все, кроме наследников.
     /// @param other Копируемое мультимножество.
@@ -87,7 +90,6 @@ public:
     /// @return Размер бинарного множества
     vector<pair<BinarySet *, u64>> &data();
 
-
     /// @brief Возвращает i-ую пару из указателя на бинарный массив и его кратности в мультимножестве
     /// @param index Индекс запрашиваемой пары (index < size)
     /// @return i-ая пара из указателя на бинарный массив и его кратности в мультимножестве
@@ -98,7 +100,17 @@ public:
     /// @return Адрес i-ой пары в мультимножестве
     pair<BinarySet *, u64>& operator[](u8 index);
 
+
+
+    /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
+    void generateSeriesOfIncreasingNumbers();
+
+    /// @brief Генерирует универсум как код Грея BinaryMultiset generateGrayCodeUniversum(u8 bit_depth);
+    void generateGrayCode();
+    //void zeroes() { m_data};
+
     void clear();
+
     ~BinaryMultiset() { clear(); };
 
 private:
