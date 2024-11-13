@@ -20,12 +20,6 @@ class BinaryMultiset
     // При уничтожении универсума, очищаются и его "дети"
     BinaryMultiset *m_universum;
 
-    // Массив адресов мультимножеств,
-    // для которых данное мультимножество является универсумом.
-    set<BinaryMultiset *> m_subsets;
-
-    // !TODO Сделать обновление (добавление/удаление) списка детей и кластерное удаление!!!!!!!!!!!!!
-
     // Количество элементов в бинарном множестве
     u8 m_bit_depth;
 
@@ -37,7 +31,7 @@ class BinaryMultiset
 
     // Множество пар из указателей на множество в универсуме и
     // их количества в конкретном мультимножетсве
-    vector<pair<BinarySet *, u64>> m_data;
+    vector<pair<BinarySet, u64>> m_data;
 
 public:
     /// @brief Конструктор универсума
@@ -53,6 +47,8 @@ public:
 
     BinaryMultiset(BinaryMultiset &&other);
 
+    void ManualInput();
+    void AutoInput();
 
     /// @brief Перегрузка оператора присваивания. Копирует все, кроме наследников.
     /// @param other Копируемое мультимножество.
@@ -88,18 +84,17 @@ public:
 
     /// @brief Возращает разрядность элементов мультимножетсва
     /// @return Размер бинарного множества
-    vector<pair<BinarySet *, u64>> &data();
+    vector<pair<BinarySet, u64>> &data();
 
     /// @brief Возвращает i-ую пару из указателя на бинарный массив и его кратности в мультимножестве
     /// @param index Индекс запрашиваемой пары (index < size)
     /// @return i-ая пара из указателя на бинарный массив и его кратности в мультимножестве
-    pair<BinarySet *, u64> operator[](u8 index) const;
+    pair<BinarySet, u64> operator[](u64 index) const;
 
     /// @brief Возвращает адрес i-ой пары из указателя на бинарный массив и его кратности в мультимножестве
     /// @param index Индекс запрашиваемой пары (index < size)
     /// @return Адрес i-ой пары в мультимножестве
-    pair<BinarySet *, u64>& operator[](u8 index);
-
+    pair<BinarySet, u64>& operator[](u64 index);
 
 
     /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
@@ -112,10 +107,6 @@ public:
     void clear();
 
     ~BinaryMultiset() { clear(); };
-
-private:
-    void addToUniversumSubsets();
-    void removefromUniversumSubsets();
 };
 
 /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
