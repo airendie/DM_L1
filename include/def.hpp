@@ -12,5 +12,7 @@ typedef u_int32_t u32;
 // unsigned int 64 bits <=> unsinged 64 bits
 typedef u_int64_t u64;
 
+const u8 MAX_N = 16;
+
 #endif // end of def.hpp
 

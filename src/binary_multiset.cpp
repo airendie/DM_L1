@@ -38,42 +38,88 @@ BinaryMultiset::BinaryMultiset(BinaryMultiset &&other)
 
 void BinaryMultiset::ManualInput()
 {
-    std::cout << "Please, input binary set or 'f' to finish input. (Format: \"011010\"): ";
-    std::string s;
-    std::cin >> s;
-    if (is_binary(s))
+    if (m_universum != nullptr)
     {
-        if (s.length() <= m_bit_depth)
+        m_data.clear();
+        m_size = 0;
+
+        bool is_finish = false;
+        if (m_universum->m_bit_depth)
         {
-            std::cout << "Correct." << std::endl;
-        }
-        else
-        {
+            while (m_size < m_universum->m_size && !is_finish)
+            {
+                std::string str_bit_set;
+                std::string str_occurrence_multiplicity;
+
+                do
+                {
+                    std::cout << "Please, input binary set or 'f' to finish input. (Max length of set is " << std::to_string(m_bit_depth) << "," << std::endl
+                              << "Format: \"011010\"): ";
+                    std::cin >> str_bit_set;
+                    if (str_bit_set == "f")
+                    {
+                        is_finish = true;
+                        break;
+                    }
+                } while (!is_binary_set(str_bit_set, m_bit_depth));
+
+                if (!is_finish)
+                {
+                    {
+                        std::cout << "Please, print how many copies of these set will be in multiset (from 0 to " << std::to_string(m_max_occurrence_multiplicity) << ") \n or 'f' to finish (last one won't be saved): ";
+                        std::cin >> str_occurrence_multiplicity;
+                        if (str_occurrence_multiplicity == "f")
+                        {
+                            is_finish = true;
+                            break;
+                        }
+                    }
+                    while (!is_occurrence_multiplicity(str_occurrence_multiplicity, m_max_occurrence_multiplicity));
+                }
+                if (!is_finish && std::stoi(str_occurrence_multiplicity))
+                {
+                    u64 new_bit_depth = convertStrBinarySetToU64(str_bit_set);
+
+                    m_data.push_back(std::pair<BinarySet, u64>(BinarySet(new_bit_depth, m_bit_depth),
+                                                               std::stoi(str_occurrence_multiplicity)));
+                    ++m_size;
+                }
+
+                if (is_finish)
+                {
+                    std::cout << "Input finished." << std::endl;
+                    break;
+                }
+            }
         }
     }
     else
     {
-        std::cout << "Incorrect input. Only '0' and '1' please... " << std::endl;
+        std::cout << "Input denied. Universum could not be empty." << std::endl;
     }
-
-    std::cout << "Please, print how many copies of these set will be in multiset (from 0 to " << m_max_occurrence_multiplicity << ") or 'f' to finish (last one won't be saved): ";
-    std::cin >> s;
 }
 
 void BinaryMultiset::AutoInput()
 {
     if (m_universum != nullptr)
     {
-        m_data.clear();
-        m_size = 0;
-        for (int i = rand() % m_universum->m_size; i < m_universum->m_size; i += (rand() % m_universum->m_size + 1))
+        if (m_universum->m_bit_depth)
         {
-            m_data.push_back(std::pair<BinarySet, u64>(m_universum->m_data[i].first, rand() % m_max_occurrence_multiplicity));
-            ++m_size;
+            m_data.clear();
+            m_size = 0;
+            for (int i = rand() % m_universum->m_size; i < m_universum->m_size; i += (rand() % m_universum->m_size + 1))
+            {
+                u64 occurrence = rand() % m_max_occurrence_multiplicity;
+                if (occurrence != 0)
+                {
+                    m_data.push_back(std::pair<BinarySet, u64>(m_universum->m_data[i].first, occurrence));
+                    ++m_size;
+                }
+            }
         }
     }
     else
-        std::cout << "Universum to this multiset is not declarated." << std::endl;
+        std::cout << "Universum for this multiset is not declarated." << std::endl;
 }
 
 BinaryMultiset &BinaryMultiset::operator=(const BinaryMultiset &other)
@@ -168,7 +214,7 @@ void BinaryMultiset::print() const
 {
     cout << "BinaryMultiset: \n";
 
-    if (m_bit_depth)
+    if (m_bit_depth && m_size)
     {
         for (int i = 0; i < m_size; ++i)
         {
@@ -231,6 +277,29 @@ pair<BinarySet, u64> &BinaryMultiset::operator[](u64 index)
         std::cerr << e.what() << '\n';
     }
     return *m_data.end();
+}
+
+BinaryMultiset BinaryMultiset::operator!()
+{
+    if (m_universum != nullptr)
+    {
+        BinaryMultiset result;
+
+        for (int i = 0; i < m_size; ++i)
+        {
+            for (int j = 0; j < m_universum->m_size; ++j)
+            {
+                if (m_universum->m_data[j].first == m_data[i].first)
+                {
+                    if (m_data[i].second != m_universum->max_occurrence_multiplicity())
+                        result.m_data.push_back(std::pair<BinarySet, u64>(m_data[i].first, m_universum->max_occurrence_multiplicity() - m_data[i].second));
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    return *this;
 }
 
 BinaryMultiset generateGrayCode(u8 bit_depth, u64 max_occurrence_multiplicity)

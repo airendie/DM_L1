@@ -96,13 +96,42 @@ public:
     /// @return Адрес i-ой пары в мультимножестве
     pair<BinarySet, u64>& operator[](u64 index);
 
+// Multiset's operations
+
+
+    /// @brief
+    /// @param
+    /// @return
+    BinaryMultiset operator!();
+
+    /// @brief
+    /// @param
+    /// @return
+    BinaryMultiset getUnity(const BinaryMultiset &);
+
+    /// @brief
+    /// @param
+    /// @return
+    BinaryMultiset getIntersection(const BinaryMultiset &);
+
+    /// @brief
+    /// @param
+    /// @return
+    BinaryMultiset getDifference(const BinaryMultiset &);
+
+    /// @brief
+    /// @param
+    /// @return
+    BinaryMultiset getSymmetricalDifference(const BinaryMultiset &);
+
+
+
+
 
     /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
     void generateSeriesOfIncreasingNumbers();
-
     /// @brief Генерирует универсум как код Грея BinaryMultiset generateGrayCodeUniversum(u8 bit_depth);
     void generateGrayCode();
-    //void zeroes() { m_data};
 
     void clear();
 
