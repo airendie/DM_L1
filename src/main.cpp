@@ -29,12 +29,18 @@ static void ui()
     u.print();
 
     A.AutoInput();
-    B.ManualInput();
+    // B.ManualInput();
+
 
     std::cout << "A ";
     A.print();
-    std::cout << "B ";
-    B.print();
+    // std::cout << "B ";
+    // B.print();
+
+
+    BinaryMultiset a = !A;
+    std::cout << "!A ";
+    a.print();
 }
 
 int main()

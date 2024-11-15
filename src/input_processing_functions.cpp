@@ -1,5 +1,6 @@
 #include "input_processing_functions.hpp"
 #include <iostream>
+#include <string>
 
 bool is_digits(const std::string &str)
 {
@@ -11,28 +12,19 @@ bool is_binary(const std::string &str)
     return str.find_first_not_of("01") == std::string::npos;
 }
 
-/// @brief Функция нахождения количества цифр числа типа u_int8_t
-/// @param n
-/// @return Количество цифр в числе n
-u8 length(u8 n)
-{
-    u8 length = 0;
 
-    for (; n != 0; ++length, n /= 10)
-        ;
-
-    std::cout << (int)length << std::endl;
-    return length;
-}
 
 u64 convertStrBinarySetToU64(const std::string &str)
 {
-    u64 result = 0;
+    int64_t result = 0;
 
     size_t strLength = str.length();
     for (int i = 0; i < strLength; ++i)
     {
-        result += (((u64)str[strLength - i - 1]) << i);
+        // int64_t n1 = str[i];
+        // u_int64_t n2 = str[i];
+        // std::cout << i << ": " << str[i] << " " << (u64)str[i] - 48 << std::endl;
+        result += ((((u64)str[i] - 48)) << (strLength - i - 1));
     }
     std::cout << "Длина: " << strLength << std::endl
               << "Строка: " << str << std::endl
@@ -95,7 +87,7 @@ bool is_bit_depth(std::string &str)
     return false;
 }
 
-bool is_occurrence_multiplicity(std::string &str, u64 max_occurrence_multiplicity)
+bool is_occurrence_multiplicity(std::string &str, u64 max_occur)
 {
     // Проверка на наличие элементов в строке
     if (!str.empty())
@@ -113,14 +105,20 @@ bool is_occurrence_multiplicity(std::string &str, u64 max_occurrence_multiplicit
                 // std::cout << signif << std::endl;
 
                 // Проверка на превышение максимальной длины ввода
-                if (length(max_occurrence_multiplicity) >= signif.length() && max_occurrence_multiplicity >= std::stoi(signif))
+                if (length(max_occur) >= signif.length())
                 {
+                    std::cout << "max_o_m: " << (int)max_occur << std::endl <<
+                                        "o_m: " << signif << std::endl;
+                    if (max_occur >= std::stoi(signif))
+                        return true;
                     // std::cout << "Correct." << std::endl;
-                    return true;
+
                 }
                 else
                 {
-                    std::cout << "Incorrect input! Occurrence multiplicity could not be more than " << std::to_string(max_occurrence_multiplicity) << "...\n";
+                    std::cout << "max_o_m: " << (int)max_occur << ", " << length(max_occur) << std::endl <<
+                                        "o_m: " << signif << ", " << signif.length() << std::endl;
+                    std::cout << "Incorrect input! Occurrence multiplicity could not be more than " << std::to_string(max_occur) << "...\n";
                 }
             }
             // Введенное число - 0

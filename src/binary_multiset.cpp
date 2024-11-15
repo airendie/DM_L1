@@ -50,6 +50,9 @@ void BinaryMultiset::ManualInput()
             {
                 std::string str_bit_set;
                 std::string str_occurrence_multiplicity;
+                BinarySet new_set;
+                u64 new_occurrence_multiplicity;
+                u64 new_bit_depth;
 
                 do
                 {
@@ -65,6 +68,10 @@ void BinaryMultiset::ManualInput()
 
                 if (!is_finish)
                 {
+                    new_bit_depth = convertStrBinarySetToU64(str_bit_set);
+                    new_set = BinarySet(new_bit_depth, m_bit_depth);
+
+                    do
                     {
                         std::cout << "Please, print how many copies of these set will be in multiset (from 0 to " << std::to_string(m_max_occurrence_multiplicity) << ") \n or 'f' to finish (last one won't be saved): ";
                         std::cin >> str_occurrence_multiplicity;
@@ -73,16 +80,32 @@ void BinaryMultiset::ManualInput()
                             is_finish = true;
                             break;
                         }
-                    }
-                    while (!is_occurrence_multiplicity(str_occurrence_multiplicity, m_max_occurrence_multiplicity));
-                }
-                if (!is_finish && std::stoi(str_occurrence_multiplicity))
-                {
-                    u64 new_bit_depth = convertStrBinarySetToU64(str_bit_set);
+                    } while (!is_occurrence_multiplicity(str_occurrence_multiplicity, m_max_occurrence_multiplicity));
 
-                    m_data.push_back(std::pair<BinarySet, u64>(BinarySet(new_bit_depth, m_bit_depth),
-                                                               std::stoi(str_occurrence_multiplicity)));
-                    ++m_size;
+                    if (!is_finish)
+                    {
+                        new_occurrence_multiplicity = std::stoi(str_occurrence_multiplicity);
+                    }
+                }
+                if (!is_finish && new_occurrence_multiplicity)
+                {
+                    bool is_repeated = false;
+                    for (int i = 0; i < m_size; ++i)
+                    {
+                        if (m_data[i].first == new_set)
+                        {
+                            m_data[i] = std::pair<BinarySet, u64>(new_set, new_occurrence_multiplicity);
+                            is_repeated = true;
+                            std::cout << "Binary set repeated. Overwriting." << std::endl;
+                            break;
+                        }
+                    }
+                    if (!is_repeated)
+                    {
+                        m_data.push_back(std::pair<BinarySet, u64>(BinarySet(new_bit_depth, m_bit_depth),
+                                                                   std::stoi(str_occurrence_multiplicity)));
+                        ++m_size;
+                    }
                 }
 
                 if (is_finish)
@@ -279,22 +302,37 @@ pair<BinarySet, u64> &BinaryMultiset::operator[](u64 index)
     return *m_data.end();
 }
 
-BinaryMultiset BinaryMultiset::operator!()
+BinaryMultiset BinaryMultiset::operator!() const
 {
     if (m_universum != nullptr)
     {
         BinaryMultiset result;
 
-        for (int i = 0; i < m_size; ++i)
+        for (int j = 0; j < m_universum->m_size; ++j)
         {
-            for (int j = 0; j < m_universum->m_size; ++j)
+            bool is_found = false;
+            for (int i = 0; i < m_size; ++i)
             {
                 if (m_universum->m_data[j].first == m_data[i].first)
                 {
+                    is_found = true;
+
                     if (m_data[i].second != m_universum->max_occurrence_multiplicity())
-                        result.m_data.push_back(std::pair<BinarySet, u64>(m_data[i].first, m_universum->max_occurrence_multiplicity() - m_data[i].second));
+                    {
+                        result.m_data.push_back(std::pair<BinarySet, u64>(m_universum->data()[j].first, m_universum->max_occurrence_multiplicity() - m_data[i].second));
+                        ++result.m_size;
+
+                        std::cout << "Added: " << result.m_data[result.m_size - 1].first << ", " << std::to_string(m_universum->max_occurrence_multiplicity() - m_data[i].second) << std::endl;
+                    }
                     break;
                 }
+            }
+            if (!is_found)
+            {
+                result.m_data.push_back(m_universum->data()[j]);
+                ++result.m_size;
+
+                std::cout << "Added: " << result.m_data[result.m_size - 1].first << ", " << std::to_string(result.m_data[result.m_size - 1].second) << std::endl;
             }
         }
         return result;

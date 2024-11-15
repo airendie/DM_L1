@@ -102,27 +102,27 @@ public:
     /// @brief
     /// @param
     /// @return
-    BinaryMultiset operator!();
+    BinaryMultiset operator!() const;
 
     /// @brief
     /// @param
     /// @return
-    BinaryMultiset getUnity(const BinaryMultiset &);
+    BinaryMultiset getUnity(const BinaryMultiset &) const;
 
     /// @brief
     /// @param
     /// @return
-    BinaryMultiset getIntersection(const BinaryMultiset &);
+    BinaryMultiset getIntersection(const BinaryMultiset &) const;
 
     /// @brief
     /// @param
     /// @return
-    BinaryMultiset getDifference(const BinaryMultiset &);
+    BinaryMultiset getDifference(const BinaryMultiset &) const;
 
     /// @brief
     /// @param
     /// @return
-    BinaryMultiset getSymmetricalDifference(const BinaryMultiset &);
+    BinaryMultiset getSymmetricalDifference(const BinaryMultiset &) const;
 
 
 
