@@ -1,5 +1,5 @@
-#ifndef INPUT_PROCESSING
-#define INPUT_PROCESSING
+#ifndef INPUT_PROCESSING_HPP
+#define INPUT_PROCESSING_HPP
 
 #include "def.hpp"
 #include <string>

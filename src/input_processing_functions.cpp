@@ -12,8 +12,6 @@ bool is_binary(const std::string &str)
     return str.find_first_not_of("01") == std::string::npos;
 }
 
-
-
 u64 convertStrBinarySetToU64(const std::string &str)
 {
     int64_t result = 0;
@@ -26,9 +24,9 @@ u64 convertStrBinarySetToU64(const std::string &str)
         // std::cout << i << ": " << str[i] << " " << (u64)str[i] - 48 << std::endl;
         result += ((((u64)str[i] - 48)) << (strLength - i - 1));
     }
-    std::cout << "Длина: " << strLength << std::endl
-              << "Строка: " << str << std::endl
-              << "Число: " << std::to_string(result) << std::endl;
+    // std::cout << "Длина: " << strLength << std::endl
+    //           << "Строка: " << str << std::endl
+    //           << "Число: " << std::to_string(result) << std::endl;
     return result;
 }
 
@@ -101,23 +99,19 @@ bool is_occurrence_multiplicity(std::string &str, u64 max_occur)
             // Если в числе есть хотя бы одна ненулевая цифра
             if (first_significant_digit != std::string::npos)
             {
-                std::string signif = str.substr(first_significant_digit);
+                std::string significant_part = str.substr(first_significant_digit);
                 // std::cout << signif << std::endl;
-
+                std::cout << "signif: " <<  significant_part << std::endl;
                 // Проверка на превышение максимальной длины ввода
-                if (length(max_occur) >= signif.length())
+                if (significant_part.length() <= length(max_occur) && max_occur >= std::stoi(significant_part))
                 {
-                    std::cout << "max_o_m: " << (int)max_occur << std::endl <<
-                                        "o_m: " << signif << std::endl;
-                    if (max_occur >= std::stoi(signif))
-                        return true;
+                    return true;
                     // std::cout << "Correct." << std::endl;
-
                 }
                 else
                 {
-                    std::cout << "max_o_m: " << (int)max_occur << ", " << length(max_occur) << std::endl <<
-                                        "o_m: " << signif << ", " << signif.length() << std::endl;
+                    // std::cout << "max_o_m: " << (int)max_occur << ", " << length(max_occur) << std::endl
+                    //           << "o_m: " << signif << ", " << signif.length() << std::endl;
                     std::cout << "Incorrect input! Occurrence multiplicity could not be more than " << std::to_string(max_occur) << "...\n";
                 }
             }
@@ -125,7 +119,6 @@ bool is_occurrence_multiplicity(std::string &str, u64 max_occur)
             else
             {
                 //    std::cout << "Incorrect input! Number could not start from zero...\n";
-
                 // std::cout << "Correct." << std::endl;
                 return true;
             }
