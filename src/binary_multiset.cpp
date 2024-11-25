@@ -112,7 +112,7 @@ void BinaryMultiset::AutoInput()
         {
             clear();
 
-            for (int i = rand() % (m_universum->m_size + 1); i < m_universum->m_size; i += (rand() % (m_universum->m_size + 1) + 1) / 2)
+            for (int i = rand() % (m_universum->m_size + 1); i < m_universum->m_size; i += (rand() % (m_universum->m_size + 1) - rand() % (m_universum->m_size)))
             {
                 u64 occurrence = rand() % (m_max_occurrence_multiplicity + 1);
 
@@ -330,14 +330,6 @@ void BinaryMultiset::push_back_or_replace(const std::pair<BinarySet, u64> &new_p
     }
 }
 
-void BinaryMultiset::setBitDepth(u8 new_bit_depth)
-{
-    if (m_universum == nullptr)
-    {
-        m_bit_depth = new_bit_depth;
-    }
-}
-
 u64 BinaryMultiset::max_occurrence_multiplicity() const
 {
     return m_max_occurrence_multiplicity;
@@ -480,7 +472,7 @@ BinaryMultiset BinaryMultiset::getUnion(const BinaryMultiset &other) const
 //     {
 //         BinaryMultiset result(m_universum);
 //         const BinaryMultiset *multisets[2];
-
+//
 //         if (m_size > other.m_size)
 //         {
 //             multisets[0] = this;
@@ -491,16 +483,16 @@ BinaryMultiset BinaryMultiset::getUnion(const BinaryMultiset &other) const
 //             multisets[0] = &other;
 //             multisets[1] = this;
 //         }
-
+//
 //         result = *multisets[1];
-
+//
 //         size_t result_size = 0;
 //         for (size_t i = 0; i < multisets[0]->size(); ++i)
 //         {
 //             bool is_found = false;
 //             for (size_t j = 0; j < multisets[1]->size(); ++j)
 //             {
-
+//
 //                 if ((*multisets[0])[i].first == (*multisets[1])[j].first)
 //                 {
 //                     is_found = true;
@@ -514,11 +506,11 @@ BinaryMultiset BinaryMultiset::getUnion(const BinaryMultiset &other) const
 //                 // std::cout << "Added: " << (*multisets[0])[i].first << " " << (*multisets[0])[i].second << std::endl;
 //             }
 //         }
-
+//
 //         other = nullptr;
 //         return result;
 //     }
-
+//
 //     return BinaryMultiset();
 // }
 
@@ -564,7 +556,7 @@ BinaryMultiset BinaryMultiset::getIntersection(const BinaryMultiset &other) cons
 //     {
 //         BinaryMultiset result(m_universum);
 //         const BinaryMultiset *multisets[2];
-
+//
 //         if (m_size > other.m_size)
 //         {
 //             multisets[0] = this;
@@ -575,7 +567,7 @@ BinaryMultiset BinaryMultiset::getIntersection(const BinaryMultiset &other) cons
 //             multisets[0] = &other;
 //             multisets[1] = this;
 //         }
-
+//
 //         size_t result_size = 0;
 //         for (size_t i = 0; i < multisets[0]->size(); ++i)
 //         {
@@ -588,7 +580,7 @@ BinaryMultiset BinaryMultiset::getIntersection(const BinaryMultiset &other) cons
 //                 }
 //             }
 //         }
-
+//
 //         other = nullptr;
 //         return result;
 //     }
@@ -606,46 +598,130 @@ BinaryMultiset BinaryMultiset::getDifference(const BinaryMultiset &other) const
 //     return getIntersection(!other);
 // }
 
-BinaryMultiset BinaryMultiset::getSymmetricalDifference(const BinaryMultiset &other) const
+BinaryMultiset BinaryMultiset::getSymmetricDifference(const BinaryMultiset &other) const
 {
     // (A\B) union (B\A)
     return getDifference(other).getUnion(other.getDifference(*this));
 }
-
-// BinaryMultiset BinaryMultiset::getSymmetricalDifference(BinaryMultiset &&other) const
+// BinaryMultiset BinaryMultiset::getSymmetricDifference(BinaryMultiset &&other) const
 // {
 //     return getDifference(other).getUnion(other.getDifference(*this));
 // }
 
-// BinaryMultiset generateGrayCode(u8 bit_depth, u64 max_occurrence_multiplicity)
-// {
-//     BinaryMultiset new_set(bit_depth, max_occurrence_multiplicity);
-//     // По массивам
-//     for (size_t i = 0; i < new_set.size(); ++i)
-//     {
-//         for (size_t j = 0; j < new_set.bit_depth(); ++j)
-//         {
-//             int full_interval = 1 << (j + 2);
-//             int half_of_interval = 1 << (j + 1);
-//             int max_limit_of_current_interval = full_interval * (1 + i / full_interval) - (1 << j);
+BinaryMultiset BinaryMultiset::operator+(const BinaryMultiset &other) const
+{
+    if (m_universum == other.m_universum)
+    {
+        BinaryMultiset result(m_universum);
+        const BinaryMultiset *multisets[2];
 
-//             int center_of_current_interval = max_limit_of_current_interval - half_of_interval;
-//             new_set[i].first[j] = (i >= center_of_current_interval &&
-//                                    i < max_limit_of_current_interval);
-//             new_set[i].second = max_occurrence_multiplicity;
-//         }
-//     }
-//     return new_set;
-// }
+        if (m_size > other.m_size)
+        {
+            multisets[0] = this;
+            multisets[1] = &other;
+        }
+        else
+        {
+            multisets[0] = &other;
+            multisets[1] = this;
+        }
 
-// BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth, u64 max_occurance_multiplicity)
-// {
-//     BinaryMultiset new_set(bit_depth, max_occurance_multiplicity);
+        result = *multisets[1];
 
-//     for (u64 i = 0; i < new_set.size(); ++i)
-//     {
-//         new_set.data()[i] = (std::pair<BinarySet, u64>(BinarySet(i, bit_depth), max_occurance_multiplicity));
-//         // std::cout << "Added: " << i << " in " << i << std::endl;
-//     }
-//     return new_set;
-// }
+        size_t result_size = 0;
+        for (size_t i = 0; i < multisets[0]->size(); ++i)
+        {
+            bool is_found = false;
+            for (size_t j = 0; j < multisets[1]->size(); ++j)
+            {
+                if ((*multisets[0])[i].first == (*multisets[1])[j].first)
+                {
+                    is_found = true;
+                    result.push_back_or_replace((*multisets[0])[i].first, (((*multisets[0])[i].second + (*multisets[1])[j].second > m_max_occurrence_multiplicity) ? m_max_occurrence_multiplicity : (int64_t)(*multisets[0])[i].second + (int64_t)(*multisets[1])[j].second));
+                    // std::cout << "Added: " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].first : (*multisets[1])[j].first) << " " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].second : (*multisets[1])[j].second) << std::endl;
+                }
+            }
+            if (!is_found)
+            {
+                result.push_back_or_replace((*multisets[0])[i]);
+                // std::cout << "Added: " << (*multisets[0])[i].first << " " << (*multisets[0])[i].second << std::endl;
+            }
+        }
+
+        return result;
+    }
+    return BinaryMultiset();
+}
+
+BinaryMultiset BinaryMultiset::operator-(const BinaryMultiset &other) const
+{
+    if (m_universum == other.m_universum)
+    {
+        BinaryMultiset result(m_universum);
+
+        size_t result_size = 0;
+        for (size_t i = 0; i < m_size; ++i)
+        {
+            for (size_t j = 0; j < other.m_size; ++j)
+            {
+                if (m_data[i].first == other[j].first)
+                {
+                    result.push_back_or_replace(m_data[i].first, ((int64_t(m_data[i].second) - int64_t(other[j].second)) > 0) ? (m_data[i].second - other[j].second) : 0);
+                    // std::cout << "Added: " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].first : (*multisets[1])[j].first) << " " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].second : (*multisets[1])[j].second) << std::endl;
+                }
+            }
+        }
+
+        return result;
+    }
+    return BinaryMultiset();
+}
+
+BinaryMultiset BinaryMultiset::operator*(const BinaryMultiset &other) const
+{
+    if (m_universum == other.m_universum)
+    {
+        BinaryMultiset result(m_universum);
+
+        size_t result_size = 0;
+        for (size_t i = 0; i < m_size; ++i)
+        {
+            for (size_t j = 0; j < other.m_size; ++j)
+            {
+                if (m_data[i].first == other[j].first)
+                {
+                    result.push_back_or_replace(m_data[i].first, (((m_data[i].second * other[j].second) > m_max_occurrence_multiplicity) ? m_max_occurrence_multiplicity : (m_data[i].second * other[j].second)));
+                    // std::cout << "Added: " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].first : (*multisets[1])[j].first) << " " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].second : (*multisets[1])[j].second) << std::endl;
+                }
+            }
+        }
+
+        return result;
+    }
+    return BinaryMultiset();
+}
+
+BinaryMultiset BinaryMultiset::operator/(const BinaryMultiset &other) const
+{
+    if (m_universum == other.m_universum)
+    {
+        BinaryMultiset result(m_universum);
+
+        size_t result_size = 0;
+        for (size_t i = 0; i < m_size; ++i)
+        {
+            for (size_t j = 0; j < other.m_size; ++j)
+            {
+                if (m_data[i].first == other[j].first)
+                {
+                    result.push_back_or_replace(m_data[i].first, m_data[i].second / other[j].second);
+                    // std::cout << "Added: " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].first : (*multisets[1])[j].first) << " " << (((*multisets[0])[i].second < (*multisets[1])[j].second) ? (*multisets[0])[i].second : (*multisets[1])[j].second) << std::endl;
+                }
+            }
+        }
+
+        return result;
+    }
+    return BinaryMultiset();
+}
+

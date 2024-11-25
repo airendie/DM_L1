@@ -89,8 +89,6 @@ public:
     void push_back_or_replace(const BinarySet &, u64 );
     void push_back_or_replace(const std::pair<BinarySet, u64> &);
 
-    void setBitDepth(u8 new_bit_depth);
-
     /// @brief Метод, возвращающий максимальную кратность вхождения элементов мультимножетсва
     /// @return Второй части пары <множество; число>
     u64 max_occurrence_multiplicity() const;
@@ -114,14 +112,13 @@ public:
 
     // Multiset's operations
 
-    /// @brief
-    /// @param
-    /// @return
+    /// @brief Функция генерации дополнения к мультимножеству
+    /// @return Мультимножество, содержащее все элементы универсума мультимножества, кроме тех, что уже содержатся в мультимножестве
     BinaryMultiset operator!() const;
 
-    /// @brief
-    /// @param
-    /// @return
+    /// @brief Функция генерации объединения двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из всех элементов операндов
     BinaryMultiset getUnion(const BinaryMultiset &) const;
 
     // /// @brief
@@ -129,20 +126,19 @@ public:
     // /// @return
     // BinaryMultiset getUnion(BinaryMultiset &&) const;
 
-    /// @brief
-    /// @param
-    /// @return
+    /// @brief Функция генерация пересечения двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из всех общих элементов операндов
     BinaryMultiset getIntersection(const BinaryMultiset &) const;
-
 
     // /// @brief
     // /// @param
     // /// @return
     // BinaryMultiset getIntersection(BinaryMultiset &&) const;
 
-    /// @brief
-    /// @param
-    /// @return
+    /// @brief Функция генерации разности двух мультимножеств
+    /// @param Второй операнд-мультимножесво
+    /// @return Мультимножество, состоящее из всех элементов первого операнда и не содержащее элементов второго
     BinaryMultiset getDifference(const BinaryMultiset &) const;
 
     // /// @brief
@@ -150,15 +146,35 @@ public:
     // /// @return
     // BinaryMultiset getDifference(BinaryMultiset &&) const;
 
-    /// @brief
-    /// @param
-    /// @return
-    BinaryMultiset getSymmetricalDifference(const BinaryMultiset &) const;
+    /// @brief Функция генерации симметрической разности двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из всех элементов обоих операндов за исключением общих для обоих мультимножеств
+    BinaryMultiset getSymmetricDifference(const BinaryMultiset &) const;
 
     // /// @brief
     // /// @param
     // /// @return
-    // BinaryMultiset getSymmetricalDifference(BinaryMultiset &&) const;
+    // BinaryMultiset getSymmetricDifference(BinaryMultiset &&) const;
+
+    /// @brief Функция генерации арифметической суммы двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из объединения операндов, кратность общих членов которых сложена
+    BinaryMultiset operator+(const BinaryMultiset &) const;
+
+    /// @brief Функция генерации арифметической разности двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из пересечения операндов, кратность общих членов которых равна разности соответственной кратностей их элементов в операндах-мультимножествах
+    BinaryMultiset operator-(const BinaryMultiset &) const;
+
+    /// @brief Функция генерации арифметическойго произведения двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из пересечения операндов, кратность общих членов которых равна произведению кратностей соответствующих элементов в мультимножествах
+    BinaryMultiset operator*(const BinaryMultiset &) const;
+
+    /// @brief Функция генерации арифметическойго частного двух мультимножеств
+    /// @param Второй операнд-мультимножество
+    /// @return Мультимножество, состоящее из пересечения операндов, кратность общих членов которых равна частному кратностей соответствующих элементов в мультимножествах
+    BinaryMultiset operator/(const BinaryMultiset &) const;
 
     /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
     void generateSeriesOfIncreasingNumbers();
@@ -169,16 +185,6 @@ public:
 
     ~BinaryMultiset() { clear(); };
 };
-
-// /// @brief Генерирует универсум как набор числел по возрастанию, начиная с 0 BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth);
-// BinaryMultiset generateSeriesOfIncreasingNumbers(u8 bit_depth,
-//                                                  u64 max_occurrence_multiplicity =
-//                                                      DEFAULT_MAX_OCCURRENCE_MULTIPLICITY);
-
-// /// @brief Генерирует универсум как код Грея BinaryMultiset generateGrayCodeUniversum(u8 bit_depth);
-// BinaryMultiset generateGrayCode(u8 bit_depth,
-//                                 u64 max_occurrence_multiplicity =
-//                                     DEFAULT_MAX_OCCURRENCE_MULTIPLICITY);
 
 #endif // end of binary_set.hpp
 

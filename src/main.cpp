@@ -61,27 +61,36 @@ void main_loop()
     bool is_restart = false;
     do
     {
-        std::cout << " ______________________________________________ " << std::endl
-                  << "|                    Menu:                     |" << std::endl
-                  << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|" << std::endl
-                  << "| 0 - exit                                     |" << std::endl
-                  << "| 1 - print !A (not A)                         |" << std::endl
-                  << "| 2 - print !B (not B)                         |" << std::endl
-                  << "| 3 - print A ⋃ B (A union B)                  |" << std::endl
-                  << "| 4 - print A ⋂ B (A intersection B)           |" << std::endl
-                  << "| 5 - print A \\ B (A difference B)             |" << std::endl
-                  << "| 6 - print B \\ A (B difference A)             |" << std::endl
-                  << "| 7 - print A △ B (A symmetrical difference B) |" << std::endl
-                  << "| 8 - print B △ A (B symmetrical difference A) |" << std::endl
-                  << "| 9 - restart                                  |" << std::endl
-                  << " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " << std::endl
-                  << "Please, input number from 0 to 9: ";
+        std::cout << " ___________________________________________________ " << std::endl
+                  << "|                       Menu:                       |" << std::endl
+                  << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|" << std::endl
+                  << "| 0  - exit                                         |" << std::endl
+                  << "| 1  - restart                                      |" << std::endl
+                  << "|___________________________________________________|" << std::endl
+                  << "| 2  - print A                                      |" << std::endl
+                  << "| 3  - print B                                      |" << std::endl
+                  << "| 4  - print !A (not A)                             |" << std::endl
+                  << "| 5  - print !B (not B)                             |" << std::endl
+                  << "| 6  - print A ⋃ B (A union B)                      |" << std::endl
+                  << "| 7  - print A ⋂ B (A intersection B)               |" << std::endl
+                  << "| 8  - print A \\ B (A difference B)                 |" << std::endl
+                  << "| 9  - print B \\ A (B difference A)                 |" << std::endl
+                  << "| 10 - print A △ B (A symmetric addition B)         |" << std::endl
+                  << "| 11 - print B △ A (B symmetric addition A)         |" << std::endl
+                  << "| 12 - print A + B (A arithmectic plus B)           |" << std::endl
+                  << "| 13 - print A - B (A arithmectic difference B)     |" << std::endl
+                  << "| 14 - print B - A (B arithmectic difference A)     |" << std::endl
+                  << "| 15 - print A * B (A arithmectic multiplication B) |" << std::endl
+                  << "| 16 - print A / B (A arithmectic division B)       |" << std::endl
+                  << "| 17 - print B / A (B arithmectic division A)       |" << std::endl
+                  << " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " << std::endl
+                  << "Please, input number from 0 to 17: ";
 
         std::string s;
         getline(std::cin, s);
 
         // input check
-        while (!is_number(s, 0, 9))
+        while (!is_number(s, 0, 17))
         {
             std::cout << "Please, try again: ";
             getline(std::cin, s);
@@ -94,56 +103,104 @@ void main_loop()
 
             break;
         case 1:
+            is_end = true;
+            is_restart = true;
+
+            break;
+        case 2:
+            std::cout << "A:" << std::endl;
+            A.print();
+            std::cout << std::endl;
+
+            break;
+        case 3:
+            std::cout << "B:" << std::endl;
+            B.print();
+            std::cout << std::endl;
+
+            break;
+        case 4:
             std::cout << "!A:" << std::endl;
             (!A).print();
             std::cout << std::endl;
 
             break;
-        case 2:
+        case 5:
             std::cout << "!B:" << std::endl;
             (!B).print();
             std::cout << std::endl;
 
             break;
-        case 3:
+        case 6:
             std::cout << "A ⋃ B:" << std::endl;
             A.getUnion(B).print();
             std::cout << std::endl;
 
             break;
-        case 4:
+        case 7:
             std::cout << "A ⋂ B:" << std::endl;
             A.getIntersection(B).print();
             std::cout << std::endl;
 
             break;
-        case 5:
+        case 8:
             std::cout << "A \\ B:" << std::endl;
             (A.getDifference(B)).print();
             std::cout << std::endl;
 
             break;
-        case 6:
+        case 9:
             std::cout << "B \\ A:" << std::endl;
             (B.getDifference(A)).print();
             std::cout << std::endl;
 
             break;
-        case 7:
+        case 10:
             std::cout << "A △ B:" << std::endl;
-            A.getSymmetricalDifference(B).print();
+            A.getSymmetricDifference(B).print();
             std::cout << std::endl;
 
             break;
-        case 8:
+        case 11:
             std::cout << "B △ A:" << std::endl;
-            B.getSymmetricalDifference(A).print();
+            B.getSymmetricDifference(A).print();
             std::cout << std::endl;
 
             break;
-        case 9:
-            is_end = true;
-            is_restart = true;
+        case 12:
+            std::cout << "A + B:" << std::endl;
+            (A + B).print();
+            std::cout << std::endl;
+
+            break;
+        case 13:
+            std::cout << "A - B:" << std::endl;
+            (A - B).print();
+            std::cout << std::endl;
+
+            break;
+        case 14:
+            std::cout << "B - A:" << std::endl;
+            (B - A).print();
+            std::cout << std::endl;
+
+            break;
+        case 15:
+            std::cout << "A * B:" << std::endl;
+            (A * B).print();
+            std::cout << std::endl;
+
+            break;
+        case 16:
+            std::cout << "A / B:" << std::endl;
+            (A / B).print();
+            std::cout << std::endl;
+
+            break;
+        case 17:
+            std::cout << "B / A:" << std::endl;
+            (B / A).print();
+            std::cout << std::endl;
 
             break;
         default:
