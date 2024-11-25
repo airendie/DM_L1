@@ -33,14 +33,12 @@ void BinaryMultiset::ManualInput()
             {
                 std::string str_bit_set;
                 std::string str_occurrence_multiplicity;
-                BinarySet new_set;
-                u64 new_occurrence_multiplicity;
-                u64 new_bit_depth;
 
                 do
                 {
-                    std::cout << "Please, input binary set. (Max length of set is " << std::to_string(m_bit_depth) << "," << " format: \"0101\"). " << "Or 'f' to finish input: ";
+                    std::cout << "Please, input binary set (format: \"0101\") or 'f' to finish: ";
                     getline(std::cin, str_bit_set);
+
                     if (str_bit_set == "f")
                     {
                         is_finish = true;
@@ -48,6 +46,9 @@ void BinaryMultiset::ManualInput()
                     }
                 } while (!is_binary_set(str_bit_set, m_bit_depth));
 
+                BinarySet new_set;
+                u64 new_occurrence_multiplicity;
+                u64 new_bit_depth;
                 if (!is_finish)
                 {
                     new_bit_depth = convertStrBinarySetToU64(str_bit_set);
@@ -111,10 +112,11 @@ void BinaryMultiset::AutoInput()
         {
             clear();
 
-            for (int i = rand() % (m_universum->m_size + 1); i < m_universum->m_size; i += (rand() % (m_universum->m_size + 1) + 1))
+            for (int i = rand() % (m_universum->m_size + 1); i < m_universum->m_size; i += (rand() % (m_universum->m_size + 1) + 1) / 2)
             {
                 u64 occurrence = rand() % (m_max_occurrence_multiplicity + 1);
-                if (occurrence != 0)
+
+                if (occurrence)
                 {
                     push_back_or_replace(std::pair<BinarySet, u64>(m_universum->m_data[i].first, occurrence));
                 }
@@ -279,6 +281,11 @@ bool BinaryMultiset::replace(const std::pair<BinarySet, u64> &new_pair)
                 is_found = true;
 
                 m_data[i].second = new_pair.second;
+
+                if (!m_data[i].second)
+                {
+                    m_data.erase(m_data.begin() + i);
+                }
             }
         }
     }
@@ -300,13 +307,16 @@ void BinaryMultiset::push_back_or_replace(const std::pair<BinarySet, u64> &new_p
     try
     {
         bool is_replaced = replace(new_pair);
+
         if (m_size < (1 << m_bit_depth))
         {
             if (!is_replaced)
             {
-                m_data.push_back(new_pair);
-
-                ++m_size;
+                if (new_pair.second != 0)
+                {
+                    m_data.push_back(new_pair);
+                    ++m_size;
+                }
             }
         }
         else

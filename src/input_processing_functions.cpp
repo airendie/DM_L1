@@ -30,6 +30,74 @@ u64 convertStrBinarySetToU64(const std::string &str)
     return result;
 }
 
+bool is_number(std::string &str, u64 min_num, u64 max_num)
+{
+    // Проверка на наличие элементов в строке
+    if (!str.empty())
+    {
+        // Проверка на наличие только цифр в строке
+        if (is_digits(str))
+        {
+            // Поиск первой ненулевой цифры
+            size_t first_significant_digit = str.find_first_not_of("0");
+            // Если в числе есть хотя бы одна ненулевая цифра
+            if (first_significant_digit != std::string::npos)
+            {
+                // Длина введенного числа может быть больше,
+                // чем длина типа int, что уронит программу
+                // Только если длина введенного числа не больше длины MAX_N,
+                // имеет смысл сравнить числовые значения
+
+                // Проверка значимой части числа-строки на возможность
+                // быть преобразованной в int и, если такая возможность есть,
+                // проверка на не
+                // превышение максимального значения разрядности
+
+                std::string signif = str.substr(first_significant_digit);
+                // std::cout << signif << std::endl;
+                if (length(min_num) <= signif.length() && min_num <= std::stoi(signif))
+                {
+                    if (length(max_num) >= signif.length() && max_num >= std::stoi(signif))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        std::cout << "Incorrect input! Number not be more than " << std::to_string(max_num) << "...\n";
+                    }
+                    // std::cout << "Correct." << std::endl;
+                }
+                else
+                {
+                    std::cout << "Incorrect input! Number not be lower than " << std::to_string(min_num) << "...\n";
+                }
+            }
+            // Введенное число - 0
+            else
+            {
+                if (min_num == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    std::cout << "Incorrect input! Number not be lower than " << std::to_string(min_num) << "...\n";
+                }
+            }
+        }
+        else
+        {
+            std::cout << "Incorrect input! Only numbers, please...\n";
+        }
+    }
+    else
+    {
+        std::cout << "Incorrect input! Number could not be empty...\n";
+    }
+
+    return false;
+}
+
 bool is_bit_depth(std::string &str)
 {
     // Проверка на наличие элементов в строке
@@ -101,7 +169,7 @@ bool is_occurrence_multiplicity(std::string &str, u64 max_occur)
             {
                 std::string significant_part = str.substr(first_significant_digit);
                 // std::cout << signif << std::endl;
-                std::cout << "signif: " <<  significant_part << std::endl;
+                std::cout << "signif: " << significant_part << std::endl;
                 // Проверка на превышение максимальной длины ввода
                 if (significant_part.length() <= length(max_occur) && max_occur >= std::stoi(significant_part))
                 {
@@ -166,4 +234,16 @@ bool is_binary_set(std::string &str, u8 bit_depth)
     }
 
     return false;
+}
+
+std::string inputBitDepth()
+{
+    std::string n;
+    do
+    {
+        std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
+        getline(std::cin, n);
+    } while (!is_bit_depth(n));
+
+    return n;
 }

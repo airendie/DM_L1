@@ -5,94 +5,165 @@
 #include "input_processing_functions.hpp"
 #include "binary_multiset.hpp"
 
-static void main_loop()
+void main_loop()
 {
-    srand(time(nullptr));
+    std::string n = inputBitDepth();
+    int bit_depth = std::stoi(n);
 
-    // n input and check
-    // std::string n;
-    // do
-    // {
-    //     std::cout << "Please, input n (integer from 0 to " << std::to_string(MAX_N) << "): ";
-    //     getline(std::cin, n);
-    // } while (!is_bit_depth(n));
+    BinaryMultiset u = BinaryMultiset(bit_depth, 10);
 
-    // int bit_depth = std::stoi(n);
-    // std::cout << bit_depth << std::endl;
-
-    int bit_depth = 3;
-    BinaryMultiset u = BinaryMultiset(3, 1000);
-
-    BinaryMultiset A(&u), B(&u);
     u.generateGrayCode();
     std::cout << "Universum: " << std::endl;
     u.print();
     std::cout << std::endl;
 
-    A.push_back_or_replace(BinarySet(2, bit_depth), 10);
-    A.push_back_or_replace(BinarySet(3, bit_depth), 2);
-    A.push_back_or_replace(BinarySet(1, bit_depth), 5);
-    A.push_back_or_replace(BinarySet(0, bit_depth), 7);
+    BinaryMultiset A(&u), B(&u);
 
-    B.push_back_or_replace(BinarySet(2, bit_depth), 7);
-    B.push_back_or_replace(BinarySet(3, bit_depth), 2);
-    B.push_back_or_replace(BinarySet(0, bit_depth), 1000);
+    for (size_t i = 0; i < 2; ++i)
+    {
+        BinaryMultiset *activeSet = (!i) ? &A : &B;
 
-    //A.AutoInput();
-    //A.AutoInput();
-    //B.AutoInput();
+        std::string s;
+        std::cout << "Please, choose input mode for multiset " << ((!i) ? "A" : "B") << " (1 - manual input, 2 - random generated): ";
+        getline(std::cin, s);
 
-    std::cout << "A:" << std::endl;
-    A.print();
-    std::cout << std::endl;
+        bool is_end = false;
+        do
+        {
+            // input check
+            while (!is_number(s, 1, 2))
+            {
+                std::cout << "Please, try again: ";
+                getline(std::cin, s);
+            }
 
-    std::cout << "B:" << std::endl;
-    B.print();
-    std::cout << std::endl;
+            switch (std::stoi(s))
+            {
+            case 1:
+                activeSet->ManualInput();
+                is_end = true;
+                break;
+            case 2:
+                activeSet->AutoInput();
+                is_end = true;
+                break;
+            default:
+                break;
+            }
+        } while (!is_end);
 
-    std::cout << "!A:" << std::endl;
-    (!A).print();
-    std::cout << std::endl;
+        std::cout << ((!i) ? "A" : "B") << ":" << std::endl;
+        activeSet->print();
+        std::cout << std::endl;
+    }
 
-    std::cout << "!B:" << std::endl;
-    (!B).print();
-    std::cout << std::endl;
+    bool is_end = false;
+    bool is_restart = false;
+    do
+    {
+        std::cout << " ______________________________________________ " << std::endl
+                  << "|                    Menu:                     |" << std::endl
+                  << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|" << std::endl
+                  << "| 0 - exit                                     |" << std::endl
+                  << "| 1 - print !A (not A)                         |" << std::endl
+                  << "| 2 - print !B (not B)                         |" << std::endl
+                  << "| 3 - print A ⋃ B (A union B)                  |" << std::endl
+                  << "| 4 - print A ⋂ B (A intersection B)           |" << std::endl
+                  << "| 5 - print A \\ B (A difference B)             |" << std::endl
+                  << "| 6 - print B \\ A (B difference A)             |" << std::endl
+                  << "| 7 - print A △ B (A symmetrical difference B) |" << std::endl
+                  << "| 8 - print B △ A (B symmetrical difference A) |" << std::endl
+                  << "| 9 - restart                                  |" << std::endl
+                  << " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " << std::endl
+                  << "Please, input number from 0 to 9: ";
 
-    std::cout << "A union B:" << std::endl;
-    A.getUnion(B).print();
-    std::cout << std::endl;
+        std::string s;
+        getline(std::cin, s);
 
-    std::cout << "B union A:" << std::endl;
-    B.getUnion(A).print();
-    std::cout << std::endl;
+        // input check
+        while (!is_number(s, 0, 9))
+        {
+            std::cout << "Please, try again: ";
+            getline(std::cin, s);
+        }
 
-    std::cout << "A intersection B:" << std::endl;
-    A.getIntersection(B).print();
-    std::cout << std::endl;
+        switch (std::stoi(s))
+        {
+        case 0:
+            is_end = true;
 
-    std::cout << "B intersection A:" << std::endl;
-    B.getIntersection(A).print();
-    std::cout << std::endl;
+            break;
+        case 1:
+            std::cout << "!A:" << std::endl;
+            (!A).print();
+            std::cout << std::endl;
 
-    std::cout << "A \\ B:" << std::endl;
-    (A.getDifference(B)).print();
-    std::cout << std::endl;
+            break;
+        case 2:
+            std::cout << "!B:" << std::endl;
+            (!B).print();
+            std::cout << std::endl;
 
-    std::cout << "B \\ A:" << std::endl;
-    (B.getDifference(A)).print();
-    std::cout << std::endl;
+            break;
+        case 3:
+            std::cout << "A ⋃ B:" << std::endl;
+            A.getUnion(B).print();
+            std::cout << std::endl;
 
-    std::cout << "A symmetrical difference B:" << std::endl;
-    A.getSymmetricalDifference(B).print();
-    std::cout << std::endl;
+            break;
+        case 4:
+            std::cout << "A ⋂ B:" << std::endl;
+            A.getIntersection(B).print();
+            std::cout << std::endl;
 
-    std::cout << "B symmetrical difference A:" << std::endl;
-    B.getSymmetricalDifference(A).print();
-    std::cout << std::endl;
+            break;
+        case 5:
+            std::cout << "A \\ B:" << std::endl;
+            (A.getDifference(B)).print();
+            std::cout << std::endl;
+
+            break;
+        case 6:
+            std::cout << "B \\ A:" << std::endl;
+            (B.getDifference(A)).print();
+            std::cout << std::endl;
+
+            break;
+        case 7:
+            std::cout << "A △ B:" << std::endl;
+            A.getSymmetricalDifference(B).print();
+            std::cout << std::endl;
+
+            break;
+        case 8:
+            std::cout << "B △ A:" << std::endl;
+            B.getSymmetricalDifference(A).print();
+            std::cout << std::endl;
+
+            break;
+        case 9:
+            is_end = true;
+            is_restart = true;
+
+            break;
+        default:
+            break;
+        }
+    } while (!is_end);
+
+    if (is_restart)
+    {
+        std::cout << "Restart." << std::endl;
+        main_loop();
+    }
+    else
+        std::cout << "End." << std::endl;
 }
 
 int main()
 {
+    srand(time(nullptr));
+
     main_loop();
 
     return 1;
