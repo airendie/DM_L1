@@ -54,17 +54,28 @@ void BinaryMultiset::ManualInput()
                     new_bit_depth = convertStrBinarySetToU64(str_bit_set);
                     new_set = BinarySet(new_bit_depth, m_bit_depth);
 
-                    do
-                    {
-                        std::cout << "Please, input how many copies of this set will be in multiset (from 0 to " << std::to_string(m_max_occurrence_multiplicity) << ") \n or 'f' to finish (last one won't be saved): ";
-                        getline(std::cin, str_occurrence_multiplicity);
-                        if (str_occurrence_multiplicity == "f")
-                        {
-                            is_finish = true;
-                            break;
-                        }
-                    } while (!is_occurrence_multiplicity(str_occurrence_multiplicity, m_max_occurrence_multiplicity));
+                    std::cout << "Please, input occurrence multiplicity of this set (from 0 to " << std::to_string(m_max_occurrence_multiplicity) << ") or 'f' to finish (last one won't be saved): ";
+                    getline(std::cin, str_occurrence_multiplicity);
 
+                    if (str_occurrence_multiplicity == "f")
+                    {
+                        is_finish = true;
+                        break;
+                    }
+                    else
+                    {
+                        while (!is_occurrence_multiplicity(str_occurrence_multiplicity, m_max_occurrence_multiplicity))
+                        {
+                            std::cout << "Please, try again: ";
+                            getline(std::cin, str_occurrence_multiplicity);
+
+                            if (str_occurrence_multiplicity == "f")
+                            {
+                                is_finish = true;
+                                break;
+                            }
+                        }
+                    }
                     if (!is_finish)
                     {
                         new_occurrence_multiplicity = std::stoi(str_occurrence_multiplicity);
@@ -724,4 +735,3 @@ BinaryMultiset BinaryMultiset::operator/(const BinaryMultiset &other) const
     }
     return BinaryMultiset();
 }
-

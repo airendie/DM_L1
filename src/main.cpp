@@ -61,29 +61,29 @@ void main_loop()
     bool is_restart = false;
     do
     {
-        std::cout << " ___________________________________________________ " << std::endl
-                  << "|                       Menu:                       |" << std::endl
-                  << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|" << std::endl
-                  << "| 0  - exit                                         |" << std::endl
-                  << "| 1  - restart                                      |" << std::endl
-                  << "|___________________________________________________|" << std::endl
-                  << "| 2  - print A                                      |" << std::endl
-                  << "| 3  - print B                                      |" << std::endl
-                  << "| 4  - print !A (not A)                             |" << std::endl
-                  << "| 5  - print !B (not B)                             |" << std::endl
-                  << "| 6  - print A ⋃ B (A union B)                      |" << std::endl
-                  << "| 7  - print A ⋂ B (A intersection B)               |" << std::endl
-                  << "| 8  - print A \\ B (A difference B)                 |" << std::endl
-                  << "| 9  - print B \\ A (B difference A)                 |" << std::endl
-                  << "| 10 - print A △ B (A symmetric addition B)         |" << std::endl
-                  << "| 11 - print B △ A (B symmetric addition A)         |" << std::endl
-                  << "| 12 - print A + B (A arithmectic plus B)           |" << std::endl
-                  << "| 13 - print A - B (A arithmectic difference B)     |" << std::endl
-                  << "| 14 - print B - A (B arithmectic difference A)     |" << std::endl
-                  << "| 15 - print A * B (A arithmectic multiplication B) |" << std::endl
-                  << "| 16 - print A / B (A arithmectic division B)       |" << std::endl
-                  << "| 17 - print B / A (B arithmectic division A)       |" << std::endl
-                  << " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " << std::endl
+        std::cout << "╒═══════════════════════════════════════════════════╕" << std::endl
+                  << "│                       Menu:                       │" << std::endl
+                  << "╞═══════════════════════════════════════════════════╡" << std::endl
+                  << "│ 0  - exit                                         │" << std::endl
+                  << "│ 1  - restart                                      │" << std::endl
+                  << "╞═══════════════════════════════════════════════════╡" << std::endl
+                  << "│ 2  - print A                                      │" << std::endl
+                  << "│ 3  - print B                                      │" << std::endl
+                  << "│ 4  - print !A (not A)                             │" << std::endl
+                  << "│ 5  - print !B (not B)                             │" << std::endl
+                  << "│ 6  - print A ⋃ B (A union B)                      │" << std::endl
+                  << "│ 7  - print A ⋂ B (A intersection B)               │" << std::endl
+                  << "│ 8  - print A \\ B (A difference B)                 │" << std::endl
+                  << "│ 9  - print B \\ A (B difference A)                 │" << std::endl
+                  << "│ 10 - print A △ B (A symmetric addition B)         │" << std::endl
+                  << "│ 11 - print B △ A (B symmetric addition A)         │" << std::endl
+                  << "│ 12 - print A + B (A arithmectic plus B)           │" << std::endl
+                  << "│ 13 - print A - B (A arithmectic difference B)     │" << std::endl
+                  << "│ 14 - print B - A (B arithmectic difference A)     │" << std::endl
+                  << "│ 15 - print A * B (A arithmectic multiplication B) │" << std::endl
+                  << "│ 16 - print A / B (A arithmectic division B)       │" << std::endl
+                  << "│ 17 - print B / A (B arithmectic division A)       │" << std::endl
+                  << "╘═══════════════════════════════════════════════════╛" << std::endl
                   << "Please, input number from 0 to 17: ";
 
         std::string s;
@@ -145,13 +145,13 @@ void main_loop()
             break;
         case 8:
             std::cout << "A \\ B:" << std::endl;
-            (A.getDifference(B)).print();
+            A.getDifference(B).print();
             std::cout << std::endl;
 
             break;
         case 9:
             std::cout << "B \\ A:" << std::endl;
-            (B.getDifference(A)).print();
+            B.getDifference(A).print();
             std::cout << std::endl;
 
             break;

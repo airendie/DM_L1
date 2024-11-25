@@ -169,7 +169,7 @@ bool is_occurrence_multiplicity(std::string &str, u64 max_occur)
             {
                 std::string significant_part = str.substr(first_significant_digit);
                 // std::cout << signif << std::endl;
-                std::cout << "signif: " << significant_part << std::endl;
+                // std::cout << "signif: " << significant_part << std::endl;
                 // Проверка на превышение максимальной длины ввода
                 if (significant_part.length() <= length(max_occur) && max_occur >= std::stoi(significant_part))
                 {
@@ -215,7 +215,7 @@ bool is_binary_set(std::string &str, u8 bit_depth)
             // Проверка на превышение максимальной длины
             if (str.length() <= bit_depth)
             {
-                std::cout << "Correct." << std::endl;
+                // std::cout << "Correct." << std::endl;
                 return true;
             }
             else
